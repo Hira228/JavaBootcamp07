@@ -1,33 +1,42 @@
 package edu.school21.employee;
 
 
-import edu.school21.annotations.HtmlForm;
-import edu.school21.annotations.HtmlInput;
+import edu.school21.annotations.OrmColumn;
+import edu.school21.annotations.OrmColumnId;
+import edu.school21.annotations.OrmEntity;
 
-@HtmlForm(fileName = "user_form.html", action = "/users", method = "post")
+@OrmEntity(table = "simple_user")
 public class User {
-    @HtmlInput(type = "text", name = "first_name", placeholder = "Enter First Name")
+
+    @OrmColumnId
+    private Long id;
+
+    @OrmColumn(name = "first_name", length = 10)
     private String firstName;
-    @HtmlInput(type = "text", name = "last_name", placeholder = "Enter Last Name")
+
+    @OrmColumn(name = "last_name", length = 10)
     private String lastName;
-    @HtmlInput(type = "password", name = "password", placeholder = "Enter Password")
-    private int height;
+
+    @OrmColumn(name = "age")
+    private Integer age;
+
+
 
     public User() {
         this.firstName = "Default first name";
         this.lastName = "Default last name";
-        this.height = 0;
+        this.age = 0;
     }
 
-    public User(String firstName, String lastName, int height) {
+    public User(String firstName, String lastName, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.height = height;
+        this.age = age;
     }
 
     private int grow(int value) {
-        this.height += value;
-        return height;
+        this.age += value;
+        return age;
     }
 
     @Override
@@ -36,7 +45,7 @@ public class User {
                 .append("[")
                 .append("firstName='").append(firstName).append("', ")
                 .append("lastName='").append(lastName).append("', ")
-                .append("height=").append(height)
+                .append("age=").append(age)
                 .append("]")
                 .toString();
     }

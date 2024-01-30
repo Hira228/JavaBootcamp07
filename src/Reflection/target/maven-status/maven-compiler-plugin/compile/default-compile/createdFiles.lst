@@ -1,6 +1,7 @@
-edu/school21/annotations/HtmlInput.class
-edu/school21/employee/User.class
 edu/school21/models/Car.class
-edu/school21/annotations/HtmlForm.class
+edu/school21/employee/User.class
+edu/school21/annotations/OrmEntity.class
+edu/school21/orm/OrmProcessor.class
 META-INF/services/javax.annotation.processing.Processor
-edu/school21/html/HtmlProcessor.class
+edu/school21/annotations/OrmColumnId.class
+edu/school21/annotations/OrmColumn.class

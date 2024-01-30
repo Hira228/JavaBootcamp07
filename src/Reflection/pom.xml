@@ -27,7 +27,7 @@
                         <configuration>
                     <proc>only</proc>
                             <annotationProcessors>
-                    <annotationProcessor>edu.school21.html.HtmlProcessor
+                    <annotationProcessor>edu.school21.orm.OrmProcessor
                     </annotationProcessor>
                 </annotationProcessors>
                         </configuration>
@@ -37,6 +37,16 @@
     </build>
     <dependencies>
 
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
 
     <dependency>
         <groupId>com.google.auto.service</groupId>
