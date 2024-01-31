@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import edu.school21.annotations.OrmColumn;
+import edu.school21.annotations.OrmColumnId;
 import edu.school21.annotations.OrmEntity;
 
 import javax.annotation.processing.*;
@@ -25,14 +26,21 @@ import java.util.Set;
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         HikariConfig config = new HikariConfig("/hikari.properties");
+        StringBuilder dropTable = new StringBuilder();
         HikariDataSource dataSource = new HikariDataSource(config);
         try (Connection connection = dataSource.getConnection()){
             StringBuilder sqlQuery = new StringBuilder();
             for(Element element : roundEnv.getElementsAnnotatedWith(OrmEntity.class)){
-                sqlQuery.append("CREATE TABLE " + element.getAnnotation(OrmEntity.class).table() +" (");
+                dropTable.append("drop table if exists ").append(element.getAnnotation(OrmEntity.class).table());
+                PreparedStatement preparedStatement = connection.prepareStatement(dropTable.toString());
+                preparedStatement.executeUpdate();
+                sqlQuery.append("CREATE TABLE ").append(element.getAnnotation(OrmEntity.class).table()).append(" (");
                 List<? extends Element> enclosedElements = element.getEnclosedElements();
-                sqlQuery.append("id serial primary key,");
                 for(Element element1 : enclosedElements) {
+                    OrmColumnId ormColumnId = element1.getAnnotation(OrmColumnId.class);
+                    if(ormColumnId != null) {
+                        sqlQuery.append("id serial primary key,");
+                    }
                     OrmColumn ormColumn = element1.getAnnotation(OrmColumn.class);
                     if (ormColumn != null ) {
                         sqlQuery.append(ormColumn.name() + " ");
@@ -55,9 +63,10 @@ import java.util.Set;
                 }
                 sqlQuery.setLength(sqlQuery.length() - 2);
                 sqlQuery.append(")");
-                PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery.toString());
-                System.out.println(sqlQuery);
-                preparedStatement.executeUpdate();
+                System.out.println(preparedStatement);
+                PreparedStatement prepared = connection.prepareStatement(sqlQuery.toString());
+                System.out.println(prepared);
+                prepared.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
